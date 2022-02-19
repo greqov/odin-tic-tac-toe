@@ -12,10 +12,9 @@
   const playerX = playerFactory('Ivan', 'x');
   const playerO = playerFactory('Peter', 'o');
 
-  // TODO: move gameboard into game?
-  let gameboard = new Array(9);
-
   const game = (function () {
+    const winner = false;
+    const gameboard = new Array(9);
     const player = playerX;
     const round = 1;
 
@@ -24,6 +23,7 @@
     }
 
     function getWinner() {
+      // TODO: highlight win row
       const winCases = [
         [0, 1, 2],
         [3, 4, 5],
@@ -37,15 +37,15 @@
 
       for (let i = 0; i < winCases.length; i++) {
         const cells = winCases[i];
-        const cellA = gameboard[cells[0]];
-        const cellB = gameboard[cells[1]];
-        const cellC = gameboard[cells[2]];
+        const cellA = this.gameboard[cells[0]];
+        const cellB = this.gameboard[cells[1]];
+        const cellC = this.gameboard[cells[2]];
 
         if (cellA !== undefined && cellA === cellB && cellA === cellC) {
           console.log('We have a winner! It is', this.player.name);
-          return this.player;
+          this.winner = this.player;
+          return;
         }
-        console.log('No winner for now...');
       }
 
       // TODO: check tie case (check round counter)
@@ -53,30 +53,27 @@
         console.log('Tie!');
         // TODO: disable game
       }
-
-      return false;
     }
 
     function makeMove(cell) {
       console.log(`Current player ${this.player.name}, round ${this.round}`);
-      if (!gameboard[cell]) {
-        gameboard[cell] = this.player.mark;
-        // eslint-disable-next-line no-plusplus
-        this.round++;
-      } else {
-        console.log('ERROR: this cell is not empty!');
-      }
+      this.gameboard[cell] = this.player.mark;
+      // eslint-disable-next-line no-plusplus
+      this.round++;
     }
 
     function reset() {
       this.round = 1;
       this.player = playerX;
-      gameboard = new Array(9);
+      this.winner = false;
+      this.gameboard = new Array(9);
     }
 
     return {
+      gameboard,
       round, // tmp
       player,
+      winner,
       makeMove,
       reset,
       getWinner,
@@ -85,12 +82,13 @@
   })();
 
   const UI = (function () {
+    // TODO: remove round from UI
     const round = document.querySelector('.round');
     const turn = document.querySelector('.turn');
     const winnerLabel = document.querySelector('.winner');
     const restartBtn = document.querySelector('.restart-btn');
 
-    function updateDisplay() {
+    function updateTextLabels() {
       round.textContent = game.round;
       turn.textContent = `${game.player.name} (${game.player.mark})`;
     }
@@ -98,18 +96,24 @@
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
       cell.addEventListener('click', (e) => {
-        const { idx } = e.target.dataset;
-        console.log(333, game.player);
-        e.target.textContent = game.player.mark;
-        game.makeMove(idx);
-        const winner = game.getWinner();
-        if (winner) {
-          console.log('yay! winner is ', winner);
-        } else {
-          console.log('no winner, change turn then');
-          game.togglePlayer();
+        if (!game.winner) {
+          const { idx } = e.target.dataset;
+          if (!cell.textContent) {
+            e.target.textContent = game.player.mark;
+            game.makeMove(idx);
+            game.getWinner();
+            if (game.winner) {
+              console.log('yay! winner is ', game.winner);
+              winnerLabel.textContent = game.winner.name;
+            } else {
+              console.log('no winner, change turn then');
+              game.togglePlayer();
+            }
+            UI.updateTextLabels();
+          } else {
+            console.log('ERROR: cell is not empty!');
+          }
         }
-        UI.updateDisplay();
       });
     });
 
@@ -123,16 +127,16 @@
     restartBtn.addEventListener('click', () => {
       game.reset();
       UI.clearBoard();
-      UI.updateDisplay();
+      UI.updateTextLabels();
     });
 
     return {
-      updateDisplay,
       clearBoard,
+      updateTextLabels,
     };
   })();
 
   // init actions
-  UI.updateDisplay();
-  console.log(gameboard);
+  UI.updateTextLabels();
+  console.log(game.gameboard);
 })();

@@ -33,6 +33,7 @@ a {
   height: 33.33%;
   border: 1px solid #eee;
   cursor: pointer;
+  user-select: none;
 }
 
 .controls {
