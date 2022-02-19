@@ -12,19 +12,18 @@
   const playerX = playerFactory('Ivan', 'x');
   const playerO = playerFactory('Peter', 'o');
 
-  const gameboard = (function () {
-    return new Array(9);
-  })();
+  // TODO: move gameboard into game?
+  let gameboard = new Array(9);
 
   const game = (function () {
-    let player = playerX;
-    let round = 1;
+    const player = playerX;
+    const round = 1;
 
     function togglePlayer() {
-      player = player === playerO ? playerX : playerO;
+      this.player = this.player === playerO ? playerX : playerO;
     }
 
-    function checkForWinner() {
+    function getWinner() {
       const winCases = [
         [0, 1, 2],
         [3, 4, 5],
@@ -43,8 +42,8 @@
         const cellC = gameboard[cells[2]];
 
         if (cellA !== undefined && cellA === cellB && cellA === cellC) {
-          console.log('We have a winner! It is', player.name);
-          return;
+          console.log('We have a winner! It is', this.player.name);
+          return this.player;
         }
         console.log('No winner for now...');
       }
@@ -54,36 +53,86 @@
         console.log('Tie!');
         // TODO: disable game
       }
+
+      return false;
     }
 
     function makeMove(cell) {
-      console.log(`Current player ${player.name}, round ${round}`);
+      console.log(`Current player ${this.player.name}, round ${this.round}`);
       if (!gameboard[cell]) {
-        gameboard[cell] = player.mark;
+        gameboard[cell] = this.player.mark;
         // eslint-disable-next-line no-plusplus
-        round++;
-        checkForWinner();
-        togglePlayer();
+        this.round++;
       } else {
         console.log('ERROR: this cell is not empty!');
       }
     }
 
+    function reset() {
+      this.round = 1;
+      this.player = playerX;
+      gameboard = new Array(9);
+    }
+
     return {
+      round, // tmp
       player,
       makeMove,
+      reset,
+      getWinner,
+      togglePlayer,
+    };
+  })();
+
+  const UI = (function () {
+    const round = document.querySelector('.round');
+    const turn = document.querySelector('.turn');
+    const winnerLabel = document.querySelector('.winner');
+    const restartBtn = document.querySelector('.restart-btn');
+
+    function updateDisplay() {
+      round.textContent = game.round;
+      turn.textContent = `${game.player.name} (${game.player.mark})`;
+    }
+
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((cell) => {
+      cell.addEventListener('click', (e) => {
+        const { idx } = e.target.dataset;
+        console.log(333, game.player);
+        e.target.textContent = game.player.mark;
+        game.makeMove(idx);
+        const winner = game.getWinner();
+        if (winner) {
+          console.log('yay! winner is ', winner);
+        } else {
+          console.log('no winner, change turn then');
+          game.togglePlayer();
+        }
+        UI.updateDisplay();
+      });
+    });
+
+    function clearBoard() {
+      cells.forEach((cell) => {
+        const c = cell;
+        c.textContent = '';
+      });
+    }
+
+    restartBtn.addEventListener('click', () => {
+      game.reset();
+      UI.clearBoard();
+      UI.updateDisplay();
+    });
+
+    return {
+      updateDisplay,
+      clearBoard,
     };
   })();
 
   // init actions
-  console.log(game.player);
-  game.makeMove(0);
-  console.log(game.player);
-  game.makeMove(6);
-  console.log(game.player);
-  game.makeMove(2);
-  game.makeMove(8);
-  game.makeMove(3);
-  game.makeMove(7);
+  UI.updateDisplay();
   console.log(gameboard);
 })();
