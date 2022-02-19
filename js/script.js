@@ -48,10 +48,8 @@
         }
       }
 
-      // TODO: check tie case (check round counter)
-      if (round === 9) {
-        console.log('Tie!');
-        // TODO: disable game
+      if (this.round === 10) {
+        this.winner = 'Tie!';
       }
     }
 
@@ -91,6 +89,12 @@
     function updateTextLabels() {
       round.textContent = game.round;
       turn.textContent = `${game.player.name} (${game.player.mark})`;
+
+      let txt = '...';
+      if (game.winner) {
+        txt = game.winner.name || game.winner;
+      }
+      winnerLabel.textContent = txt;
     }
 
     const cells = document.querySelectorAll('.cell');
@@ -102,10 +106,7 @@
             e.target.textContent = game.player.mark;
             game.makeMove(idx);
             game.getWinner();
-            if (game.winner) {
-              console.log('yay! winner is ', game.winner);
-              winnerLabel.textContent = game.winner.name;
-            } else {
+            if (!game.winner) {
               console.log('no winner, change turn then');
               game.togglePlayer();
             }

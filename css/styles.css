@@ -21,6 +21,7 @@ a {
 .gameboard {
   display: flex;
   flex-wrap: wrap;
+  margin: 24px 0;
   width: 300px;
   height: 300px;
 }
@@ -34,8 +35,4 @@ a {
   border: 1px solid #eee;
   cursor: pointer;
   user-select: none;
-}
-
-.controls {
-  margin: 24px 0;
 }
