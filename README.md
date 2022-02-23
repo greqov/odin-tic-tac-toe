@@ -1,4 +1,4 @@
-# Template project
+# Tic Tac Toe
 
 ## Links:
 
