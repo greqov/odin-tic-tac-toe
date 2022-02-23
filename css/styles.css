@@ -24,6 +24,7 @@ a {
   margin: 24px 0;
   width: 300px;
   height: 300px;
+  border: 1px solid #eee;
 }
 
 .cell {
@@ -35,4 +36,9 @@ a {
   border: 1px solid #eee;
   cursor: pointer;
   user-select: none;
+}
+
+footer {
+  padding: 60px 0 40px;
+  text-align: center;
 }
