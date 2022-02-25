@@ -3,30 +3,24 @@
 (function () {
   // TODO: play against AI
   function playerFactory(name, mark) {
-    // TODO: how to set up a prototype? do I need to set it at all?
-    const player = Object.create(playerFactory.prototype);
-    player.name = name;
-    player.mark = mark;
-    // TODO: prompt a name
-    return player;
+    return { name, mark };
   }
-
-  playerFactory.prototype.setName = () => console.log('factory method in action');
-
-  const playerX = playerFactory('Ivan', 'x');
-  console.log(playerX);
-  console.log(playerX.setName());
-  const playerO = playerFactory('Peter', 'o');
 
   const game = (function () {
     const winner = false;
     const gameboard = new Array(9);
     // TODO: pick/change who is the first player?
-    const player = playerX;
+    let player;
     const round = 1;
 
+    function init(player1, player2) {
+      this.playerX = player1;
+      this.playerO = player2;
+      this.player = this.playerX;
+    }
+
     function togglePlayer() {
-      this.player = this.player === playerO ? playerX : playerO;
+      this.player = this.player === this.playerO ? this.playerX : this.playerO;
     }
 
     function getWinner() {
@@ -48,8 +42,8 @@
         const cellB = this.gameboard[cells[1]];
         const cellC = this.gameboard[cells[2]];
 
+        // TODO: use .every() somehow?
         if (cellA !== undefined && cellA === cellB && cellA === cellC) {
-          console.log('We have a winner! It is', this.player.name);
           this.winner = this.player;
           return;
         }
@@ -61,7 +55,6 @@
     }
 
     function makeMove(cell) {
-      console.log(`Current player ${this.player.name}, round ${this.round}`);
       this.gameboard[cell] = this.player.mark;
       // eslint-disable-next-line no-plusplus
       this.round++;
@@ -69,7 +62,7 @@
 
     function reset() {
       this.round = 1;
-      this.player = playerX;
+      this.player = this.playerX;
       this.winner = false;
       this.gameboard = new Array(9);
     }
@@ -79,6 +72,7 @@
       round, // tmp
       player,
       winner,
+      init,
       makeMove,
       reset,
       getWinner,
@@ -92,6 +86,7 @@
     const turn = document.querySelector('.turn');
     const winnerLabel = document.querySelector('.winner');
     const restartBtn = document.querySelector('.js-restart-btn');
+    const gameForm = document.querySelector('.js-game-form');
     const cancelBtn = document.querySelector('.js-cancel-form-btn');
     const startBtn = document.querySelector('.js-start-game-btn');
 
@@ -116,7 +111,6 @@
             game.makeMove(idx);
             game.getWinner();
             if (!game.winner) {
-              console.log('no winner, change turn then');
               game.togglePlayer();
             }
             UI.updateTextLabels();
@@ -161,7 +155,16 @@
       const nameX = nameXInput.value || 'Ivan';
       const nameO = nameOInput.value || 'Peter';
       const gameMode = document.querySelector('input[name="gameMode"]:checked').value;
+
       console.log({ nameX, nameO, gameMode });
+
+      const playerX = playerFactory(nameX, 'x');
+      const playerO = playerFactory(nameO, 'o');
+
+      // TODO: disable game before init()
+      game.init(playerX, playerO);
+      UI.updateTextLabels();
+      // TODO: clear game form with .reset()
     });
 
     return {
@@ -169,8 +172,4 @@
       updateTextLabels,
     };
   })();
-
-  // init actions
-  UI.updateTextLabels();
-  console.log(game.gameboard);
 })();
