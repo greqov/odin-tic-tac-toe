@@ -21,10 +21,55 @@
               It's time to play the game!
             </p>
 
-            <div class="block">
-              <button class="button is-primary" type="button">New game</button>
-              <button class="button js-restart-btn" type="button">Restart game</button>
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="button">New game</button>
+              </div>
+
+              <div class="control">
+                <button class="button js-restart-btn" type="button">Restart game</button>
+              </div>
             </div>
+
+            <form action="#" class="js-game-form">
+              <div class="field">
+                <label class="label">Play against</label>
+                <div class="control">
+                  <label class="radio">
+                    <input type="radio" name="gameMode" value="human" checked>
+                    Human
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="gameMode" value="bot">
+                    Bot
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="nameX">Player X</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Enter name" name="nameX" id="nameX" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="nameO">Player O</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Enter name" name="nameO" id="nameO" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                  <button class="button is-link is-light js-cancel-form-btn">Cancel</button>
+                </div>
+                <div class="control">
+                  <!-- TODO: give more sane names to buttons -->
+                  <button class="button is-link js-start-game-btn">Start</button>
+                </div>
+              </div>
+            </form>
 
             <div class="block">
               Round: <span class="round">...</span><br/>

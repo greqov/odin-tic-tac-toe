@@ -1,20 +1,27 @@
 'use strict';
 
 (function () {
+  // TODO: play against AI
   function playerFactory(name, mark) {
+    // TODO: how to set up a prototype? do I need to set it at all?
+    const player = Object.create(playerFactory.prototype);
+    player.name = name;
+    player.mark = mark;
     // TODO: prompt a name
-    return {
-      name,
-      mark,
-    };
+    return player;
   }
 
+  playerFactory.prototype.setName = () => console.log('factory method in action');
+
   const playerX = playerFactory('Ivan', 'x');
+  console.log(playerX);
+  console.log(playerX.setName());
   const playerO = playerFactory('Peter', 'o');
 
   const game = (function () {
     const winner = false;
     const gameboard = new Array(9);
+    // TODO: pick/change who is the first player?
     const player = playerX;
     const round = 1;
 
@@ -84,7 +91,9 @@
     const round = document.querySelector('.round');
     const turn = document.querySelector('.turn');
     const winnerLabel = document.querySelector('.winner');
-    const restartBtn = document.querySelector('.restart-btn');
+    const restartBtn = document.querySelector('.js-restart-btn');
+    const cancelBtn = document.querySelector('.js-cancel-form-btn');
+    const startBtn = document.querySelector('.js-start-game-btn');
 
     function updateTextLabels() {
       round.textContent = game.round;
@@ -129,6 +138,30 @@
       game.reset();
       UI.clearBoard();
       UI.updateTextLabels();
+    });
+
+    const gameModeInputs = document.querySelectorAll('input[name="gameMode"]');
+    const nameXInput = document.querySelector('input[name="nameX"]');
+    const nameOInput = document.querySelector('input[name="nameO"]');
+
+    gameModeInputs.forEach((input) => {
+      input.addEventListener('change', (e) => {
+        const { value } = e.target;
+
+        if (value === 'bot') {
+          nameOInput.setAttribute('disabled', true);
+        } else {
+          nameOInput.removeAttribute('disabled');
+        }
+      });
+    });
+
+    startBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const nameX = nameXInput.value || 'Ivan';
+      const nameO = nameOInput.value || 'Peter';
+      const gameMode = document.querySelector('input[name="gameMode"]:checked').value;
+      console.log({ nameX, nameO, gameMode });
     });
 
     return {
