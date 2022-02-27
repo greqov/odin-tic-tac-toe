@@ -45,6 +45,7 @@
         // TODO: use .every() somehow?
         if (cellA !== undefined && cellA === cellB && cellA === cellC) {
           this.winner = this.player;
+          this.winner.cells = cells;
           return;
         }
       }
@@ -112,6 +113,11 @@
             game.getWinner();
             if (!game.winner) {
               game.togglePlayer();
+            } else {
+              // TODO: refactor as UI method?
+              game.winner.cells.forEach((index) => {
+                document.querySelector(`[data-idx="${index}"]`).classList.add('is-win');
+              });
             }
             UI.updateTextLabels();
           } else {
@@ -125,10 +131,12 @@
       cells.forEach((cell) => {
         const c = cell;
         c.textContent = '';
+        c.classList.remove('is-win');
       });
     }
 
     restartBtn.addEventListener('click', () => {
+      if (!game.player) return;
       game.reset();
       UI.clearBoard();
       UI.updateTextLabels();
@@ -155,8 +163,6 @@
       const nameX = nameXInput.value || 'Ivan';
       const nameO = nameOInput.value || 'Peter';
       const gameMode = document.querySelector('input[name="gameMode"]:checked').value;
-
-      console.log({ nameX, nameO, gameMode });
 
       const playerX = playerFactory(nameX, 'x');
       const playerO = playerFactory(nameO, 'o');

@@ -18,6 +18,12 @@
   border: 1px solid #eee;
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.cell.is-win {
+  color: white;
+  background-color: pink;
 }
 
 .footer {
