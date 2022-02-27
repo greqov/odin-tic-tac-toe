@@ -23,7 +23,7 @@
 
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary js-new-game-btn js-modal-trigger" type="button" data-target="modal-new-game">New game</button>
+                <button class="button is-warning js-new-game-btn js-modal-trigger" type="button" data-target="modal-new-game">New game</button>
               </div>
 
               <div class="control">
@@ -97,6 +97,29 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    <div class="modal" id="modal-winner">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h2 class="title">Сongratulations!</h2>
+
+          <div class="block">
+            <p class="subtitle">The winner is...</p>
+          </div>
+
+          <div class="field is-grouped is-grouped-right">
+            <div class="control">
+              <button class="button is-light js-modal-close">Close</button>
+            </div>
+            <div class="control">
+              <button class="button is-link js-restart-btn js-modal-close">Restart game</button>
+            </div>
+          </div>
         </div>
       </div>
       <button class="modal-close is-large" aria-label="close"></button>

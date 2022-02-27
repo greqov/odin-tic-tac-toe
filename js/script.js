@@ -87,7 +87,7 @@
     const turn = document.querySelector('.turn');
     const winnerLabel = document.querySelector('.winner');
     const newGameBtn = document.querySelector('.js-new-game-btn');
-    const restartBtn = document.querySelector('.js-restart-btn');
+    const restartBtn = document.querySelectorAll('.js-restart-btn');
     const gameForm = document.querySelector('.js-game-form');
     const cancelBtn = document.querySelector('.js-cancel-form-btn');
     const startBtn = document.querySelector('.js-start-game-btn');
@@ -122,6 +122,10 @@
                 winCells.forEach((index) => {
                   document.querySelector(`[data-idx="${index}"]`).classList.add('is-win');
                 });
+
+                setTimeout(() => {
+                  openModal(document.getElementById('modal-winner'));
+                }, 1000);
               }
             }
             UI.updateTextLabels();
@@ -140,12 +144,14 @@
       });
     }
 
-    restartBtn.addEventListener('click', () => {
-      if (!game.player) return;
-      // TODO: add restart method, fix reset method
-      game.reset();
-      UI.clearBoard();
-      UI.updateTextLabels();
+    restartBtn.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!game.player) return;
+        // TODO: add restart method, fix reset method
+        game.reset();
+        UI.clearBoard();
+        UI.updateTextLabels();
+      });
     });
 
     const gameModeInputs = document.querySelectorAll('input[name="gameMode"]');
@@ -206,24 +212,21 @@
   })();
 
   // BULMA MODAL
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    // Functions to open and close a modal
-    function openModal($el) {
-      document.querySelector('html').classList.add('is-clipped');
-      $el.classList.add('is-active');
-    }
-
-    function closeModal($el) {
-      document.querySelector('html').classList.remove('is-clipped');
-      $el.classList.remove('is-active');
-    }
-
-    function closeAllModals() {
-      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
-        closeModal($modal);
-      });
-    }
-
     // Add a click event on buttons to open a specific modal
     (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
       const modal = $trigger.dataset.target;

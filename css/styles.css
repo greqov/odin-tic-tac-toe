@@ -33,3 +33,7 @@
 .modal-content {
   max-width: 420px;
 }
+
+.modal-background {
+  background-color: rgba(40, 40, 40, 0.5);
+}
