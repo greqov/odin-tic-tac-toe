@@ -29,3 +29,7 @@
 .footer {
   padding: 32px;
 }
+
+.modal-content {
+  max-width: 420px;
+}
