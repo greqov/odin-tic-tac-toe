@@ -173,6 +173,13 @@
       // TODO: clear game form with .reset()
     });
 
+    cancelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      gameForm.reset();
+      nameOInput.removeAttribute('disabled');
+      // TODO: close modal? in case of modal
+    });
+
     return {
       clearBoard,
       updateTextLabels,
