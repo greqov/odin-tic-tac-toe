@@ -115,9 +115,12 @@
               game.togglePlayer();
             } else {
               // TODO: refactor as UI method?
-              game.winner.cells.forEach((index) => {
-                document.querySelector(`[data-idx="${index}"]`).classList.add('is-win');
-              });
+              const winCells = game.winner.cells;
+              if (winCells) {
+                winCells.forEach((index) => {
+                  document.querySelector(`[data-idx="${index}"]`).classList.add('is-win');
+                });
+              }
             }
             UI.updateTextLabels();
           } else {
