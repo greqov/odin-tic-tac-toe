@@ -86,6 +86,7 @@
     const round = document.querySelector('.round');
     const turn = document.querySelector('.turn');
     const winnerLabel = document.querySelector('.winner');
+    const newGameBtn = document.querySelector('.js-new-game-btn');
     const restartBtn = document.querySelector('.js-restart-btn');
     const gameForm = document.querySelector('.js-game-form');
     const cancelBtn = document.querySelector('.js-cancel-form-btn');
@@ -93,7 +94,8 @@
 
     function updateTextLabels() {
       round.textContent = game.round;
-      turn.textContent = `${game.player.name} (${game.player.mark})`;
+      const { player } = game;
+      turn.textContent = player ? `${game.player.name} (${game.player.mark})` : '...';
 
       let txt = '...';
       if (game.winner) {
@@ -176,11 +178,24 @@
       // TODO: clear game form with .reset()
     });
 
-    cancelBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    function resetForm() {
       gameForm.reset();
       nameOInput.removeAttribute('disabled');
+    }
+
+    cancelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetForm();
       // TODO: close modal? in case of modal
+    });
+
+    newGameBtn.addEventListener('click', () => {
+      resetForm();
+      game.reset();
+      game.player = '';
+      UI.clearBoard();
+      UI.updateTextLabels();
+      // TODO: open a modal then?
     });
 
     return {
